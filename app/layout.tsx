@@ -15,8 +15,8 @@ const urbanist = Urbanist({
 });
 
 export const metadata: Metadata = {
-  title: "ShopVerse | Trendy Products, Great Prices",
-  description: "Discover the latest fashion, tech, and home essentials at unbeatable prices. ShopVerse makes online shopping simple and stylish.",
+  title: "FlavorDesk | Delicious Food, Fast Delivery",
+  description: "Order fresh and tasty meals from FlavorDesk. Enjoy healthy, high-quality food delivered fast to your doorstep.",
 };
 
 export default async function RootLayout({
