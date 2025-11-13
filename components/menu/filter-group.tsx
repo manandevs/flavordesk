@@ -5,7 +5,7 @@ import React, { FC } from "react";
 import Box from "../box";
 import { cn } from "@/lib/utils";
 import qs from "query-string";
-import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { Check } from "lucide-react";
 
 import {
   Accordion,

@@ -32,21 +32,22 @@ const HomePage = async () => {
     },
   ];
 
-  console.log(products);
   return (
     <React.Fragment>
       <Container>
-        <section className="grid grid-cols-1 md:grid-cols-2 px-4 sm:px-6 lg:px-12 pt-16 md:pt-28">
-          <div className="flex flex-col items-start justify-start gap-4">
+        <section className="grid grid-cols-1 md:grid-cols-2 px-4 sm:px-6 lg:px-12 pt-20 md:pt-28">
+          <div className="flex flex-col items-start justify-center gap-4">
             <p className="px-6 py-1 rounded-full text-neutral-500 border border-gray-300">
-              Hungry?
+              Feeling Hungry?
             </p>
             <h2 className="text-5xl font-bold tracking-wider uppercase text-neutral-700 my-4">
-              Just Come To <span className="block">Foofied & Order</span>
+              Just Come To <span className="block">FlavorDesk & Order</span>
             </h2>
             <p className="text-base text-neutral-500 mb-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum, dignissimos aliquam.
+              Satisfy your cravings with FlavorDesk — where fresh ingredients, amazing taste,
+              and quick delivery come together to make every meal unforgettable.
             </p>
+
             <div className="my-4 flex items-center gap-4">
               <Link href="/menu">
                 <Button

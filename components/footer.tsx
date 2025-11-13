@@ -5,7 +5,7 @@ import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Footer() {
-  const [currentYear, setCurrentYear] = useState<number | null>(null);
+  const [_currentYear, setCurrentYear] = useState<number | null>(null);
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());

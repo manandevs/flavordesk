@@ -1,7 +1,7 @@
 "use client";
 
 import { Product } from "@/types-db";
-import { BadgeDollarSignIcon, CloudAlertIcon, X } from "lucide-react";
+import { CloudAlertIcon } from "lucide-react";
 import Image from "next/image";
 import React, { FC } from "react";
 import { Button } from "../ui/button";
@@ -99,7 +99,7 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
         </div>
 
         <div className="flex items-center justify-end gap-2">
-          <Button
+          {/* <Button
             onClick={onRemove}
             variant={"outline"}
             className="text-sm rounded-sm py-1 relative"
@@ -112,7 +112,7 @@ const CartItem: FC<CartItemProps> = ({ item }) => {
             </Badge>
             {formatPrice(item.price * qty)}
             <BadgeDollarSignIcon className="h-4 w-4" />
-          </Button>
+          </Button> */}
           <Button
             onClick={onRemove}
             className="text-sm rounded-sm py-1"

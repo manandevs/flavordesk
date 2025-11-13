@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, Fragment, useMemo } from "react";
+import React, { FC, Fragment } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { Product } from "@/types-db";

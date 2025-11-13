@@ -14,22 +14,29 @@ interface Query {
 const getProducts = async (query: Query = {}): Promise<Product[]> => {
   try {
     const cleanQuery = Object.fromEntries(
-      Object.entries(query).filter(([_, v]) => v !== undefined && v !== null)
+      Object.entries(query).filter(([v]) => v !== undefined && v !== null)
     );
 
-    // Build URL with query string
     const url = qs.stringifyUrl({
       url: `${BASE_URL}/products`,
       query: cleanQuery,
     });
 
+    console.log("Fetching products from:", url); 
+
     const res = await fetch(url);
+
+    if (!res.ok) { 
+      const errorText = await res.text();
+      console.error(`Fetch failed with status ${res.status}: ${errorText}`);
+      throw new Error(`Failed to fetch products: ${res.statusText}`);
+    }
 
     const data: Product[] = await res.json();
     return data;
   } catch (error) {
     console.error("Error fetching products:", error);
-    throw error; 
+    throw error;
   }
 };
 

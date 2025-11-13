@@ -13,7 +13,7 @@ export async function getFilterOptions<T>(
   try {
     const cleanQuery = Object.fromEntries(
       Object.entries(query).filter(
-        ([_, value]) => value !== undefined && value !== null
+        ([value]) => value !== undefined && value !== null
       )
     );
 

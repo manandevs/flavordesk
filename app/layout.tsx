@@ -37,13 +37,6 @@ export default async function RootLayout({
             <ToastProvider />
           </div>
           <Footer />
-          <Image
-            src={'/svg/hero.svg'}
-            alt="image"
-            width={2765}
-            height={2765}
-            className="absolute top-0 right-0 w-3/5 h-auto -z-10"
-          />
         </body>
       </html>
     </ClerkProvider>
