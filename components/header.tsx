@@ -14,6 +14,7 @@ import {
   ListOrdered,
   Home,
   CakeSlice,
+  ShoppingCart,
 } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import { useWishlist } from "@/hooks/use-wishlist";
@@ -85,13 +86,26 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
             href="/orders"
             className="relative flex items-center gap-2 text-gray-700 hover:text-black"
           >
-            {cartItems.length > 0 && (
+            <ShoppingCart />
+            Orders
+          </Link>
+
+          {/* === FIXED CART LINK === */}
+          <Link
+            href={
+              userId
+                ? "/cart"
+                : process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in"
+            }
+            className="relative flex items-center gap-2 text-gray-700 hover:text-black"
+          >
+            {cartItems.length > 0 && userId && (
               <span className="absolute -top-1 -left-2.5 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                 {cartItems.length}
               </span>
             )}
             <ShoppingBag size={18} />
-            Orders
+            Cart
           </Link>
 
           <Link
@@ -170,13 +184,29 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
                     href="/orders"
                     className="relative flex items-center gap-2 text-gray-700 hover:text-black"
                   >
-                    {cartItems.length > 0 && (
+                    <ShoppingBag size={18} />
+                    Orders
+                  </Link>
+                </DropdownMenuItem>
+
+                {/* === MOBILE CART WITH LOGIN CHECK === */}
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={
+                      userId
+                        ? "/cart"
+                        : process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in"
+                    }
+                    className="relative flex items-center gap-2 text-gray-700 hover:text-black"
+                  >
+                    {cartItems.length > 0 && userId && (
                       <span className="absolute -top-1 left-0 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                         {cartItems.length}
                       </span>
                     )}
+
                     <ShoppingBag size={18} />
-                    Orders
+                    Cart
                   </Link>
                 </DropdownMenuItem>
 
