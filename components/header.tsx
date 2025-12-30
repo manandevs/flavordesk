@@ -3,28 +3,26 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useRouter } from "next/navigation"; // Added router
 import { UserButton } from "@clerk/nextjs";
-import { Badge } from "./ui/badge";
 import {
   Menu,
-  ShoppingBag,
-  Heart,
   UserCircle,
+  Search,
   ListOrdered,
   Home,
-  CakeSlice,
-  ShoppingCart,
+  UtensilsCrossed,
+  Phone,
 } from "lucide-react";
-import { useCart } from "@/hooks/use-cart";
-import { useWishlist } from "@/hooks/use-wishlist";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import Logo from "./logo";
+import CartSidebar from "./cart-sidebar";
+import WishlistSidebar from "./wishlist-sidebar";
 
 interface HeaderProps {
   userId: string | null;
@@ -32,8 +30,8 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ userId }) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const { items: cartItems } = useCart();
-  const { items: wishlistItems } = useWishlist();
+  const router = useRouter(); // Hook for navigation
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -41,211 +39,120 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Handle Search Submit
+  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent) => {
+    if ((e.type === 'keydown' && (e as React.KeyboardEvent).key !== 'Enter') || !searchValue.trim()) return;
+    
+    router.push(`/menu?search=${encodeURIComponent(searchValue)}`);
+    setSearchValue(""); 
+  };
+
   const navItems = [
     { label: "Home", href: "/", icon: Home },
-    { label: "Menu", href: "/menu", icon: ListOrdered },
+    { label: "Menu", href: "/menu", icon: UtensilsCrossed },
+    { label: "Orders", href: "/orders", icon: ListOrdered },
+    { label: "Contact", href: "/contact", icon: Phone },
   ];
 
   return (
     <header
       className={cn(
-        "w-full fixed top-0 left-0 z-50 transition-all duration-300 border-b bg-white",
-        isScrolled ? "shadow-md" : ""
+        "fixed top-4 left-0 right-0 z-50 px-4 md:px-8 transition-all duration-300",
+        isScrolled ? "translate-y-0" : "translate-y-0"
       )}
     >
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 lg:py-4">
-        {/* === Left: Logo === */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/logo.png"
-            alt="FlavorDesk Logo"
-            width={40}
-            height={40}
-            className="w-auto h-10"
-            priority
-          />
-          <span className="text-lg font-semibold text-gray-900">
-            FlavorDesk
-          </span>
-        </Link>
+      <div
+        className={cn(
+          "max-w-7xl mx-auto rounded-[50px] py-2.5 px-4 flex items-center justify-between transition-all duration-300 border border-gray-400/10",
+          isScrolled
+            ? "bg-[#E8DCCF]/90 backdrop-blur-xl shadow-xl"
+            : "bg-[#F4EFE9]/80"
+        )}
+      >
+        <div className="flex items-center gap-8">
+          <Logo />
+          
+          <nav className="hidden lg:flex items-center gap-6">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-sm font-semibold text-primary/70 hover:text-primary transition-colors hover:bg-white/50 px-3 py-1.5 rounded-full"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
-        {/* === Center: Desktop Navigation === */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-gray-700 hover:text-black transition-colors flex items-center gap-1"
-            >
-              <item.icon size={18} />
-              {item.label}
-            </Link>
-          ))}
+        <div className="text-xl flex items-center gap-3">
+          
+          {/* Wishlist Sidebar */}
+          <WishlistSidebar />
 
-          <Link
-            href="/orders"
-            className="relative flex items-center gap-2 text-gray-700 hover:text-black"
-          >
-            <ShoppingCart />
-            Orders
-          </Link>
-
-          {/* === FIXED CART LINK === */}
-          <Link
-            href={
-              userId
-                ? "/cart"
-                : process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in"
-            }
-            className="relative flex items-center gap-2 text-gray-700 hover:text-black"
-          >
-            {cartItems.length > 0 && userId && (
-              <span className="absolute -top-1 -left-2.5 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                {cartItems.length}
-              </span>
-            )}
-            <ShoppingBag size={18} />
-            Cart
-          </Link>
-
-          <Link
-            href="/wishlist"
-            className="relative flex items-center gap-2 text-gray-700 hover:text-black"
-          >
-            {wishlistItems.length > 0 && (
-              <span className="absolute -top-1 -left-2.5 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                {wishlistItems.length}
-              </span>
-            )}
-            <CakeSlice size={18} />
-            Wishlist
-          </Link>
-        </nav>
-
-        {/* === Right: Buttons & Dropdown === */}
-        <div className="flex items-center gap-4">
-          {/* Become a host (Desktop only) */}
-          <Link
-            href="https://flavordesk-admin.vercel.app/"
-            className="hidden sm:flex"
-          >
-            <Badge
-              variant="outline"
-              className="text-sm rounded-full px-3 py-1 hover:bg-gray-100 transition"
-            >
-              Become a host
-            </Badge>
-          </Link>
-
-          {/* User Auth */}
+          {/* Cart Sidebar Button */}
           {userId ? (
-            <UserButton afterSignOutUrl="/" />
+            <CartSidebar />
           ) : (
             <Link
               href={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in"}
-              className="text-gray-700 hover:text-black"
+              className="relative w-10 h-10 flex items-center justify-center rounded-full text-primary bg-white hover:bg-primary/5 transition-colors shadow-sm border border-primary/5"
             >
-              <UserCircle size={22} />
+              <span className="text-xl">🛍️</span>
             </Link>
           )}
 
-          {/* Mobile Dropdown Menu (Right side) */}
+          {/* User Button */}
+          <div className="px-2 aspect-square bg-white rounded-2xl flex justify-center items-center">
+            {userId ? (
+                <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
+            ) : (
+              <Link
+                href={process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in"}
+                className="w-9 h-9 flex items-center justify-center rounded-full text-primary hover:bg-primary/5 text-2xl"
+              >
+                👤
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Menu */}
           <div className="lg:hidden">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button
-                  className="text-gray-700 hover:text-black"
-                  aria-label="Open menu"
-                >
-                  <Menu size={24} />
+                <button className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-primary shadow-sm border border-primary/5 hover:bg-primary hover:text-white transition-colors">
+                  <Menu size={20} />
                 </button>
               </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64 mt-4 bg-[#F4EFE9] border-primary/10 rounded-[2rem] shadow-xl p-4">
+                <div className="relative w-full mb-4 md:hidden">
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    onKeyDown={handleSearch}
+                    className="w-full h-10 rounded-full bg-white pl-4 pr-10 text-sm outline-none"
+                  />
+                  <Search 
+                    className="absolute right-3 top-2.5 text-primary/40 cursor-pointer" 
+                    size={16} 
+                    onClick={handleSearch}
+                  />
+                </div>
 
-              <DropdownMenuContent
-                align="end"
-                className="w-56 mt-2 bg-white shadow-md border rounded-md"
-              >
-                {/* Navigation Items */}
                 {navItems.map((item) => (
                   <DropdownMenuItem asChild key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="flex items-center gap-2 text-gray-700 hover:text-black"
-                    >
+                    <Link href={item.href} className="flex items-center gap-3 text-primary p-3 rounded-2xl font-bold cursor-pointer hover:bg-white transition-colors">
                       <item.icon size={18} />
                       {item.label}
                     </Link>
                   </DropdownMenuItem>
                 ))}
-
-                {/* Orders */}
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/orders"
-                    className="relative flex items-center gap-2 text-gray-700 hover:text-black"
-                  >
-                    <ShoppingBag size={18} />
-                    Orders
-                  </Link>
-                </DropdownMenuItem>
-
-                {/* === MOBILE CART WITH LOGIN CHECK === */}
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={
-                      userId
-                        ? "/cart"
-                        : process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL || "/sign-in"
-                    }
-                    className="relative flex items-center gap-2 text-gray-700 hover:text-black"
-                  >
-                    {cartItems.length > 0 && userId && (
-                      <span className="absolute -top-1 left-0 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                        {cartItems.length}
-                      </span>
-                    )}
-
-                    <ShoppingBag size={18} />
-                    Cart
-                  </Link>
-                </DropdownMenuItem>
-
-                {/* Wishlist */}
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/wishlist"
-                    className="relative flex items-center gap-2 text-gray-700 hover:text-black"
-                  >
-                    {wishlistItems.length > 0 && (
-                      <span className="absolute -top-1 left-0 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                        {wishlistItems.length}
-                      </span>
-                    )}
-                    <CakeSlice size={18} />
-                    Wishlist
-                  </Link>
-                </DropdownMenuItem>
-
-                {/* Become a Host (Mobile only) */}
-                <div className="block sm:hidden">
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href="https://flavordesk-admin.vercel.app/"
-                      className="flex items-center gap-2 text-gray-700 hover:text-black"
-                    >
-                      <Badge
-                        variant="outline"
-                        className="text-sm rounded-full px-3 py-1 hover:bg-gray-100 transition"
-                      >
-                        Become a host
-                      </Badge>
-                    </Link>
-                  </DropdownMenuItem>
-                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+
         </div>
       </div>
     </header>
