@@ -19,8 +19,6 @@ import toast from "react-hot-toast";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 
 const ContactClient = () => {
   const [loading, setLoading] = useState(false);
@@ -57,7 +55,7 @@ const ContactClient = () => {
                Get in Touch
              </h1>
              <p className="text-neutral-500 text-lg mt-2 max-w-lg">
-               Have a question about our menu or an order? We're here to help.
+               Have a question about our menu or an order? We&lsquo;re here to help.
              </p>
            </div>
         </div>
@@ -138,7 +136,7 @@ const ContactClient = () => {
         {/* Right: Contact Form (White Theme) */}
         <div className="bg-white border border-neutral-100 rounded-[2.5rem] p-8 md:p-12 shadow-sm">
            <h3 className="text-2xl font-serif font-bold text-primary mb-2">Send a Message</h3>
-           <p className="text-neutral-500 mb-8">Fill out the form below and we'll reply within 24 hours.</p>
+           <p className="text-neutral-500 mb-8">Fill out the form below and we&lsquo;ll reply within 24 hours.</p>
 
            <form onSubmit={onSubmit} className="space-y-5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

@@ -1,7 +1,5 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
-
 interface WhyChooseUsCardProps {
   title: string;
   description: string;

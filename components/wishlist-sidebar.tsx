@@ -15,13 +15,14 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
+import { Product } from "@/types-db";
 
 const WishlistSidebar = () => {
   const { items, removeItem } = useWishlist();
   const { addItem } = useCart();
 
   // Helper to move item to cart
-  const onAddToCart = (item: any) => {
+  const onAddToCart = (item: Product) => {
     addItem(item);
   };
 

@@ -13,7 +13,8 @@ import {
   ShoppingBag,
   CheckCircle2,
   Clock,
-  XCircle
+  XCircle,
+  LucideIcon
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -51,7 +52,7 @@ const OrderCard = ({ order }: { order: Order }) => {
     toast.success("Order ID copied");
   };
 
-  const statusMap: Record<string, { color: "default" | "secondary" | "destructive" | "success" | "outline"; icon: any }> = {
+  const statusMap: Record<string, { color: "default" | "secondary" | "destructive" | "success" | "outline"; icon: LucideIcon }> = {
     delivered: { color: "success", icon: CheckCircle2 },
     pending: { color: "secondary", icon: Clock },
     cancelled: { color: "destructive", icon: XCircle },
@@ -206,7 +207,7 @@ const OrderClient: React.FC<OrderClientProps> = ({ orders, suggestedProducts }) 
           </div>
           <h2 className="text-xl font-bold text-neutral-700 mb-2">No orders found</h2>
           <p className="text-neutral-500 max-w-sm mb-8">
-            You haven't placed any orders yet. Start exploring our delicious menu to make your first purchase!
+            You haven&apos;t placed any orders yet. Start exploring our delicious menu to make your first purchase!
           </p>
           <Link href="/menu">
             <Button className="rounded-full px-8 h-12">Browse Menu</Button>

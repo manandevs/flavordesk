@@ -26,16 +26,16 @@ const HomePage = async () => {
     getProducts({ isFeatured: true }),
     getFilterOptions<BillboardType>("billboards")
   ]);
-  
+
   const signatureDishes = products.slice(0, 6);
   const kitchenSpecials = products.slice(6, 14);
-  const mainBillboard = billboards[0] || null;
+  // const mainBillboard = billboards[0] || null;
 
-  const CurveLine = () => (
-    <svg className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
-      <path d="M0 100 C 30 50 70 50 100 0" stroke="currentColor" strokeWidth="0.5" fill="none" className="text-primary" />
-    </svg>
-  );
+  // const CurveLine = () => (
+  //   <svg className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
+  //     <path d="M0 100 C 30 50 70 50 100 0" stroke="currentColor" strokeWidth="0.5" fill="none" className="text-primary" />
+  //   </svg>
+  // );
 
   return (
     <Container className="pt-24 pb-10 px-4 sm:px-6 lg:px-8 space-y-16">
@@ -273,7 +273,7 @@ const HomePage = async () => {
                 {[...Array(5)].map((_, j) => <Star key={j} className="w-5 h-5 fill-current" />)}
               </div>
               <p className="text-primary/80 leading-relaxed text-lg font-medium italic">
-                "{item.text}"
+                &quot;{item.text}&quot;
               </p>
               <div className="flex items-center gap-4 pt-4 border-t border-primary/5">
                 <div className="w-12 h-12 bg-[#E8DCCF] rounded-full flex items-center justify-center">

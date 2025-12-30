@@ -234,7 +234,7 @@ const MenuClient: FC<MenuClientProps> = ({
             <Frown size={64} strokeWidth={1.5} />
             <h3 className="text-xl font-medium text-neutral-600">No products found</h3>
             <p className="text-center max-w-xs text-sm">
-              We couldn't find any items matching your filters or search. Try adjusting them or search for something else.
+              We couldn&#39;t find any items matching your filters or search. Try adjusting them or search for something else.
             </p>
             <Button onClick={clearFilters} variant="outline" className="mt-4">
               Reset All Filters

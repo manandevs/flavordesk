@@ -3,11 +3,10 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // Added router
+import { useRouter } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import {
   Menu,
-  UserCircle,
   Search,
   ListOrdered,
   Home,

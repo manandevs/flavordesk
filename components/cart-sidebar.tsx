@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
-import { Trash2, ShoppingCart, Plus, Minus, Loader2 } from "lucide-react"; // Added Loader2
+import { Trash2, ShoppingCart, Plus, Minus, Loader2 } from "lucide-react"; 
 import { useCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -15,12 +14,12 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import axios from "axios"; // Ensure axios is installed
+import axios from "axios";
 import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 
 const CartSidebar = () => {
-  const { items, removeItem, updateItemQuantity, removeAll } = useCart();
+  const { items, removeItem, updateItemQuantity } = useCart();
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
 
