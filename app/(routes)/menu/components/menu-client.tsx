@@ -1,13 +1,14 @@
 "use client";
 
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import Link from "next/link";
 import { ChevronRight, Home, X, Check, Filter, Frown } from "lucide-react";
 
-import { Product, Category, Size, Kitchen, Cuisine } from "@/types-db";
+import { Product, Category, Size, Kitchen, Cuisine, Billboard } from "@/types-db";
 import PopularContent from "@/components/popular-content";
+import BillboardCard from "@/components/billboard-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,12 +19,18 @@ import {
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 
+// --- Types for Random Interleaving ---
+type ContentItem = 
+  | { type: 'product'; data: Product } 
+  | { type: 'billboard'; data: Billboard; index: number };
+
 interface MenuClientProps {
   products: Product[];
   categories: Category[];
   sizes: Size[];
   kitchens: Kitchen[];
   cuisines: Cuisine[];
+  billboards: Billboard[];
 }
 
 const MenuClient: FC<MenuClientProps> = ({
@@ -32,31 +39,27 @@ const MenuClient: FC<MenuClientProps> = ({
   sizes,
   kitchens,
   cuisines,
+  billboards,
 }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const searchQuery = searchParams.get("search"); // Get search query
+  const searchQuery = searchParams.get("search");
 
   // === Filter Logic ===
   const handleFilter = (key: string, value: string) => {
     const current = qs.parse(searchParams.toString());
-    
     const query = {
       ...current,
       [key]: current[key] === value ? null : value,
     };
-
     const url = qs.stringifyUrl({
       url: "/menu",
       query,
     }, { skipNull: true, skipEmptyString: true });
-
     router.push(url);
   };
 
-  const clearFilters = () => {
-    router.push("/menu");
-  };
+  const clearFilters = () => router.push("/menu");
 
   const removeFilter = (key: string) => {
     const current = qs.parse(searchParams.toString());
@@ -76,13 +79,44 @@ const MenuClient: FC<MenuClientProps> = ({
     ([key]) => key !== "isFeatured"
   );
 
-  // === Filter Products by Search Query (Client Side) ===
   const filteredProducts = searchQuery
     ? products.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.category.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : products;
+
+  // === Random Interleaving Logic ===
+  // Calculate gaps once per change in products/billboards to avoid hydration jumps
+  const contentStack = useMemo(() => {
+    const items: ContentItem[] = [];
+    if (billboards.length === 0) {
+      return filteredProducts.map(p => ({ type: 'product' as const, data: p }));
+    }
+
+    let productIdx = 0;
+    let billboardIdx = 0;
+
+    while (productIdx < filteredProducts.length) {
+      // Logic for random gap between 8 and 14
+      const gap = Math.floor(Math.random() * (14 - 8 + 1)) + 3;
+      
+      const chunk = filteredProducts.slice(productIdx, productIdx + gap);
+      chunk.forEach(p => items.push({ type: 'product', data: p }));
+      productIdx += gap;
+
+      // Inject a billboard if products remain
+      if (productIdx < filteredProducts.length) {
+        items.push({ 
+          type: 'billboard', 
+          data: billboards[billboardIdx % billboards.length], 
+          index: billboardIdx 
+        });
+        billboardIdx++;
+      }
+    }
+    return items;
+  }, [filteredProducts, billboards]);
 
   return (
     <div className="flex flex-col md:flex-row gap-8 lg:gap-12 pt-6">
@@ -174,12 +208,26 @@ const MenuClient: FC<MenuClientProps> = ({
           </div>
         </div>
 
-        {/* Product Grid */}
+        {/* Product Grid with Interleaved Billboards */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <PopularContent key={product.id} product={product} />
-            ))}
+            {contentStack.map((item, idx) => {
+              if (item.type === 'product') {
+                return (
+                  <PopularContent key={`prod-${item.data.id}-${idx}`} product={item.data} />
+                );
+              } else {
+                return (
+                  <div key={`bill-${idx}`} className="col-span-full my-4">
+                    <BillboardCard 
+                      data={item.data} 
+                      index={item.index} 
+                      className="w-full"
+                    />
+                  </div>
+                );
+              }
+            })}
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-neutral-400 gap-4 bg-neutral-50 rounded-xl border border-dashed border-neutral-200">

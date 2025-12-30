@@ -3,7 +3,7 @@ import Container from "@/components/container";
 import MenuClient from "./components/menu-client";
 import getProducts from "@/actions/get-products";
 import { getFilterOptions } from "@/actions/get-filter-options";
-import { Category, Size, Kitchen, Cuisine } from "@/types-db";
+import { Category, Size, Kitchen, Cuisine, Billboard } from "@/types-db";
 
 export const revalidate = 0;
 
@@ -14,11 +14,11 @@ interface MenuPageProps {
     category?: string;
     kitchen?: string;
     cuisine?: string;
+    search?: string;
   }>;
 }
 
 const MenuPage = async ({ searchParams }: MenuPageProps) => {
-  // Await params (Next.js 15 requirement)
   const params = await searchParams;
   
   const query = {
@@ -29,13 +29,14 @@ const MenuPage = async ({ searchParams }: MenuPageProps) => {
     isFeatured: params.isFeatured === "true" ? true : undefined,
   };
 
-  // Fetch all data in parallel for performance
-  const [products, categories, sizes, kitchens, cuisines] = await Promise.all([
+  // Fetch all data in parallel
+  const [products, categories, sizes, kitchens, cuisines, billboards] = await Promise.all([
     getProducts(query),
     getFilterOptions<Category>("categories"),
     getFilterOptions<Size>("sizes"),
     getFilterOptions<Kitchen>("kitchens"),
     getFilterOptions<Cuisine>("cuisines"),
+    getFilterOptions<Billboard>("billboards"), // Added billboards fetch
   ]);
 
   return (
@@ -46,6 +47,7 @@ const MenuPage = async ({ searchParams }: MenuPageProps) => {
         sizes={sizes}
         kitchens={kitchens}
         cuisines={cuisines}
+        billboards={billboards} // Passed billboards
       />
     </Container>
   );

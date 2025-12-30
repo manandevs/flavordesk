@@ -4,6 +4,8 @@ import HeroCarousel from '@/components/hero-carousel';
 import PopularContent from '@/components/popular-content';
 import { Button } from '@/components/ui/button';
 import WhyChooseUsCard from '@/components/why-choose-us-card';
+import { getFilterOptions } from '@/actions/get-filter-options';
+import { Billboard as BillboardType } from '@/types-db';
 import {
   ArrowRight,
   Leaf,
@@ -13,18 +15,21 @@ import {
   MapPin,
   Utensils,
   Smartphone,
-  Star,
-  Clock,
-  ChefHat
+  Star
 } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react'
+import BillboardCard from '@/components/billboard-card';
 
 const HomePage = async () => {
-  const products = await getProducts({ isFeatured: true });
+  const [products, billboards] = await Promise.all([
+    getProducts({ isFeatured: true }),
+    getFilterOptions<BillboardType>("billboards")
+  ]);
+  
   const signatureDishes = products.slice(0, 6);
   const kitchenSpecials = products.slice(6, 14);
+  const mainBillboard = billboards[0] || null;
 
   const CurveLine = () => (
     <svg className="absolute top-0 right-0 w-full h-full pointer-events-none opacity-20" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -35,7 +40,9 @@ const HomePage = async () => {
   return (
     <Container className="pt-24 pb-10 px-4 sm:px-6 lg:px-8 space-y-16">
       <HeroCarousel products={signatureDishes} />
-      
+      {billboards[0] && <BillboardCard data={billboards[0]} index={0} className="w-full h-[400px]" />}
+
+
       <section className="-mt-12 md:-mt-24 relative z-20 px-2 md:px-10">
         <div className="bg-white p-3 rounded-[2rem] shadow-xl border border-primary/5 flex flex-col md:flex-row gap-3 items-center max-w-5xl mx-auto">
           <div className="flex-1 w-full bg-[#F9F6F3] rounded-[1.5rem] px-6 py-4 flex items-center gap-3 hover:bg-[#F0EBE5] transition-colors">
@@ -93,6 +100,11 @@ const HomePage = async () => {
         </div>
       </section>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {billboards[1] && <BillboardCard data={billboards[1]} index={3} className="md:col-span-2" />}
+        {billboards[2] && <BillboardCard data={billboards[2]} index={7} className="md:col-span-1" />}
+      </div>
+
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Offer 1 */}
         <div className="bg-[#E8DCCF] rounded-[2.5rem] p-10 md:p-12 flex flex-col justify-center items-start gap-4 shadow-sm relative overflow-hidden group">
@@ -140,6 +152,8 @@ const HomePage = async () => {
           />
         </div>
       </section>
+
+      {billboards[3] && <BillboardCard data={billboards[3]} index={3} className="w-full h-[350px]" />}
 
       <section>
         <div className="flex items-center justify-between mb-8 px-2">
