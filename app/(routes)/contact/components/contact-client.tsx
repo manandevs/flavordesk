@@ -23,15 +23,18 @@ import { Input } from "@/components/ui/input";
 const ContactClient = () => {
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget; // Capture the form element reference
     setLoading(true);
     
     // Simulate API call
     setTimeout(() => {
       setLoading(false);
       toast.success("Message sent! We'll get back to you shortly.");
-      // Reset form logic here if needed
+      
+      // Reset all form fields to null/empty
+      form.reset(); 
     }, 1500);
   };
 
@@ -142,27 +145,28 @@ const ContactClient = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                  <div className="space-y-2">
                     <label className="text-sm font-semibold text-neutral-700 ml-1">First Name</label>
-                    <Input placeholder="John" className="rounded-xl h-12 bg-neutral-50 border-neutral-200 focus:bg-white" required />
+                    <Input name="firstName" placeholder="John" className="rounded-xl h-12 bg-neutral-50 border-neutral-200 focus:bg-white" required />
                  </div>
                  <div className="space-y-2">
                     <label className="text-sm font-semibold text-neutral-700 ml-1">Last Name</label>
-                    <Input placeholder="Doe" className="rounded-xl h-12 bg-neutral-50 border-neutral-200 focus:bg-white" required />
+                    <Input name="lastName" placeholder="Doe" className="rounded-xl h-12 bg-neutral-50 border-neutral-200 focus:bg-white" required />
                  </div>
               </div>
 
               <div className="space-y-2">
                  <label className="text-sm font-semibold text-neutral-700 ml-1">Email Address</label>
-                 <Input type="email" placeholder="john@example.com" className="rounded-xl h-12 bg-neutral-50 border-neutral-200 focus:bg-white" required />
+                 <Input name="email" type="email" placeholder="john@example.com" className="rounded-xl h-12 bg-neutral-50 border-neutral-200 focus:bg-white" required />
               </div>
 
               <div className="space-y-2">
                  <label className="text-sm font-semibold text-neutral-700 ml-1">Phone (Optional)</label>
-                 <Input type="tel" placeholder="+1 (555) 000-0000" className="rounded-xl h-12 bg-neutral-50 border-neutral-200 focus:bg-white" />
+                 <Input name="phone" type="tel" placeholder="+1 (555) 000-0000" className="rounded-xl h-12 bg-neutral-50 border-neutral-200 focus:bg-white" />
               </div>
 
               <div className="space-y-2">
                  <label className="text-sm font-semibold text-neutral-700 ml-1">Message</label>
                  <textarea 
+                    name="message"
                     className="flex min-h-[120px] w-full rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 focus:bg-white resize-none"
                     placeholder="How can we help you?"
                     required

@@ -9,7 +9,7 @@ interface Query {
   cuisine?: string;
   category?: string;
   kitchen?: string;
-  storeId?: string; // <--- Add this line
+  storeId?: string; 
 }
 
 const getProducts = async (query: Query = {}): Promise<Product[]> => {

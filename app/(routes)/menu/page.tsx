@@ -5,6 +5,7 @@ import getProducts from "@/actions/get-products";
 import getStores from "@/actions/get-stores"; 
 import { getFilterOptions } from "@/actions/get-filter-options";
 import { Category, Size, Kitchen, Cuisine, Billboard } from "@/types-db";
+import StoreSearch from "@/components/store-search";
 
 export const revalidate = 0;
 
@@ -61,7 +62,8 @@ const MenuPage = async ({ searchParams }: MenuPageProps) => {
     : products;
 
   return (
-    <Container className="px-4 sm:px-6 lg:px-12 pb-24 pt-24 md:pt-32">
+    <Container className="px-4 sm:px-6 lg:px-12 pb-24 pt-52">
+      <StoreSearch />
       <div className="mb-8">
         {params.store && (
              <h2 className="text-2xl font-bold text-primary mb-2">

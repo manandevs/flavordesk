@@ -30,7 +30,6 @@ const WishlistSidebar = () => {
     <Sheet>
       <SheetTrigger asChild>
         <button className="relative w-10 h-10 flex items-center justify-center rounded-full text-primary bg-white hover:bg-primary/5 transition-colors shadow-sm border border-primary/5">
-           {/* EMOJI PRESERVED */}
           <span className="text-xl">❤️</span> 
           {items.length > 0 && (
              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white" />
@@ -87,10 +86,11 @@ const WishlistSidebar = () => {
                     
                     {/* Title & Category */}
                     <div>
-                        <h4 className="font-serif font-bold text-[#2A1B12] text-lg leading-none truncate">
+                        {/* UPDATED: Removed truncate, added line-clamp-2 and leading-tight for better wrapping */}
+                        <h4 className="font-serif font-bold text-[#2A1B12] text-lg leading-tight line-clamp-2">
                         {item.name}
                         </h4>
-                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mt-1">
+                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-widest mt-1 truncate">
                         {item.category || "ITEM"}
                         </p>
                     </div>
@@ -99,11 +99,11 @@ const WishlistSidebar = () => {
                     <div className="flex items-center justify-between mt-2">
                        <p className="font-bold text-xl text-[#2A1B12]">${item.price}</p>
 
-                       <div className="flex items-center gap-2">
+                       <div className="flex items-center gap-3">
                            {/* Add to Cart Button */}
                            <Button 
                              onClick={() => onAddToCart(item)}
-                             className="h-9 w-9 p-0 rounded-full bg-[#2A1B12] text-white hover:bg-[#2A1B12]/90 shadow-sm flex items-center justify-center"
+                             className="w-9 h-9 p-0 rounded-full bg-[#2A1B12] text-white hover:bg-[#2A1B12]/90 shadow-sm border border-black/5 flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
                              title="Add to Cart"
                            >
                              <ShoppingBag size={14} />
@@ -112,10 +112,10 @@ const WishlistSidebar = () => {
                            {/* Delete Button */}
                            <button
                               onClick={() => removeItem(item.id)}
-                              className="h-9 w-9 flex items-center justify-center bg-[#F5F3F0] rounded-full text-red-400 hover:text-red-600 hover:bg-red-50 border border-transparent hover:border-red-100 transition-all"
+                              className="w-9 h-9 flex items-center justify-center bg-transparent rounded-full text-red-400 hover:text-red-600 hover:bg-red-50 transition-all"
                               title="Remove"
                             >
-                              <Trash2 size={16} />
+                              <Trash2 size={18} />
                             </button>
                        </div>
                     </div>

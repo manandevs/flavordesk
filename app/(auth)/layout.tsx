@@ -16,7 +16,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-[#84B74E]/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Back to Home Button */}
-      <div className="absolute top-6 left-6 md:top-10 md:left-10 z-20">
+      <div className="absolute left-6 top-10 md:left-10 z-20">
          <Link 
             href="/" 
             className="flex items-center gap-2 text-primary font-bold hover:opacity-70 transition-opacity bg-white/50 backdrop-blur-sm px-4 py-2 rounded-full border border-primary/5"
